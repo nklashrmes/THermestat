@@ -4,8 +4,8 @@
   "codeowners": ["@nklashrmes"],
   "config_flow": true,
   "dependencies": ["climate","sensor", "switch"],
-  "integration_type": "helper",
   "documentation": "https://github.com/nklashrmes/THermestat",
+  "integration_type": "helper",
   "iot_class": "local_polling",
   "version": "0.1.0"
 }
