@@ -1,4 +1,4 @@
-"""Config flow for Generic hygrostat."""
+"""Config flow for THermestat."""
 
 from __future__ import annotations
 

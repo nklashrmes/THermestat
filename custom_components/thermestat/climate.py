@@ -1,4 +1,4 @@
-"""Adds support for generic thermostat units."""
+"""Adds support for thermestats units."""
 
 from __future__ import annotations
 
@@ -80,7 +80,7 @@ from .const import (
 
 _LOGGER = logging.getLogger(__name__)
 
-DEFAULT_NAME = "Generic Thermostat"
+DEFAULT_NAME = "THermestat"
 
 CONF_INITIAL_HVAC_MODE = "initial_hvac_mode"
 CONF_KEEP_ALIVE = "keep_alive"
@@ -146,7 +146,7 @@ async def async_setup_platform(
     async_add_entities: AddEntitiesCallback,
     discovery_info: DiscoveryInfoType | None = None,
 ) -> None:
-    """Set up the generic thermostat platform."""
+    """Set up the thermestat platform."""
 
     await async_setup_reload_service(hass, DOMAIN, PLATFORMS)
     await _async_setup_config(
@@ -160,7 +160,7 @@ async def _async_setup_config(
     unique_id: str | None,
     async_add_entities: AddEntitiesCallback | AddConfigEntryEntitiesCallback,
 ) -> None:
-    """Set up the generic thermostat platform."""
+    """Set up the thermestat platform."""
 
     name: str = config[CONF_NAME]
     heater_entity_id: str = config[CONF_HEATER]
@@ -210,7 +210,7 @@ async def _async_setup_config(
 
 
 class THermestat(ClimateEntity, RestoreEntity):
-    """Representation of a Generic Thermostat device."""
+    """Representation of a THermestat device."""
 
     _attr_should_poll = False
 
@@ -515,7 +515,7 @@ class THermestat(ClimateEntity, RestoreEntity):
                 _LOGGER.debug(
                     (
                         "Obtained current and target temperature. "
-                        "Generic thermostat active. %s, %s"
+                        "THermestat active. %s, %s"
                     ),
                     self._cur_temp,
                     self._target_temp,
