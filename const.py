@@ -1,4 +1,4 @@
-"""Constants for the Generic Thermostat helper."""
+"""Constants for the THermestat helper."""
 
 from homeassistant.components.climate import (
     PRESET_ACTIVITY,
@@ -10,7 +10,7 @@ from homeassistant.components.climate import (
 )
 from homeassistant.const import Platform
 
-DOMAIN = "generic_thermostat"
+DOMAIN = "thermestat"
 
 PLATFORMS = [Platform.CLIMATE]
 
@@ -19,6 +19,7 @@ CONF_COLD_TOLERANCE = "cold_tolerance"
 CONF_HEATER = "heater"
 CONF_HOT_TOLERANCE = "hot_tolerance"
 CONF_MAX_TEMP = "max_temp"
+CONF_MEMORY_MODE = "memory_mode"
 CONF_MIN_DUR = "min_cycle_duration"
 CONF_MIN_TEMP = "min_temp"
 CONF_PRESETS = {

@@ -22,6 +22,7 @@ from .const import (
     CONF_HEATER,
     CONF_HOT_TOLERANCE,
     CONF_MAX_TEMP,
+    CONF_MEMORY_MODE,
     CONF_MIN_DUR,
     CONF_MIN_TEMP,
     CONF_PRESETS,
@@ -32,6 +33,9 @@ from .const import (
 
 OPTIONS_SCHEMA = {
     vol.Required(CONF_AC_MODE): selector.BooleanSelector(
+        selector.BooleanSelectorConfig(),
+    ),
+    vol.Required(CONF_MEMORY_MODE): selector.BooleanSelector(
         selector.BooleanSelectorConfig(),
     ),
     vol.Required(CONF_SENSOR): selector.EntitySelector(

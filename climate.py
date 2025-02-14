@@ -15,6 +15,7 @@ from homeassistant.components.climate import (
     ATTR_PRESET_MODE,
     PLATFORM_SCHEMA as CLIMATE_PLATFORM_SCHEMA,
     PRESET_NONE,
+    PRESET_HOME,
     ClimateEntity,
     ClimateEntityFeature,
     HVACAction,
@@ -67,6 +68,7 @@ from .const import (
     CONF_HEATER,
     CONF_HOT_TOLERANCE,
     CONF_MAX_TEMP,
+    CONF_MEMORY_MODE,
     CONF_MIN_DUR,
     CONF_MIN_TEMP,
     CONF_PRESETS,
@@ -96,6 +98,7 @@ PLATFORM_SCHEMA_COMMON = vol.Schema(
         vol.Required(CONF_HEATER): cv.entity_id,
         vol.Required(CONF_SENSOR): cv.entity_id,
         vol.Optional(CONF_AC_MODE): cv.boolean,
+        vol.Optional(CONF_MEMORY_MODE): cv.boolean,
         vol.Optional(CONF_MAX_TEMP): vol.Coerce(float),
         vol.Optional(CONF_MIN_DUR): cv.positive_time_period,
         vol.Optional(CONF_MIN_TEMP): vol.Coerce(float),
@@ -166,6 +169,7 @@ async def _async_setup_config(
     max_temp: float | None = config.get(CONF_MAX_TEMP)
     target_temp: float | None = config.get(CONF_TARGET_TEMP)
     ac_mode: bool | None = config.get(CONF_AC_MODE)
+    memory_mode: bool | None = config.get(CONF_MEMORY_MODE)
     min_cycle_duration: timedelta | None = config.get(CONF_MIN_DUR)
     cold_tolerance: float = config[CONF_COLD_TOLERANCE]
     hot_tolerance: float = config[CONF_HOT_TOLERANCE]
@@ -180,7 +184,7 @@ async def _async_setup_config(
 
     async_add_entities(
         [
-            GenericThermostat(
+            THermestat(
                 hass,
                 name,
                 heater_entity_id,
@@ -189,6 +193,7 @@ async def _async_setup_config(
                 max_temp,
                 target_temp,
                 ac_mode,
+                memory_mode,
                 min_cycle_duration,
                 cold_tolerance,
                 hot_tolerance,
@@ -204,7 +209,7 @@ async def _async_setup_config(
     )
 
 
-class GenericThermostat(ClimateEntity, RestoreEntity):
+class THermestat(ClimateEntity, RestoreEntity):
     """Representation of a Generic Thermostat device."""
 
     _attr_should_poll = False
@@ -219,6 +224,7 @@ class GenericThermostat(ClimateEntity, RestoreEntity):
         max_temp: float | None,
         target_temp: float | None,
         ac_mode: bool | None,
+        memory_mode: bool | None,
         min_cycle_duration: timedelta | None,
         cold_tolerance: float,
         hot_tolerance: float,
@@ -239,6 +245,7 @@ class GenericThermostat(ClimateEntity, RestoreEntity):
             heater_entity_id,
         )
         self.ac_mode = ac_mode
+        self.memory_mode = memory_mode
         self.min_cycle_duration = min_cycle_duration
         self._cold_tolerance = cold_tolerance
         self._hot_tolerance = hot_tolerance
@@ -258,6 +265,7 @@ class GenericThermostat(ClimateEntity, RestoreEntity):
         self._max_temp = max_temp
         self._attr_preset_mode = PRESET_NONE
         self._target_temp = target_temp
+        self._memory_temp = target_temp
         self._attr_temperature_unit = unit
         self._attr_unique_id = unique_id
         self._attr_supported_features = (
@@ -601,8 +609,14 @@ class GenericThermostat(ClimateEntity, RestoreEntity):
         else:
             if self._attr_preset_mode == PRESET_NONE:
                 self._saved_target_temp = self._target_temp
+            if self._attr_preset_mode == PRESET_HOME :
+                self._memory_temp = self._target_temp
+            if self.memory_mode:
+                if preset_mode == PRESET_HOME:
+                    self._target_temp = self._memory_temp
+            else:
+                self._target_temp = self._presets[preset_mode]
             self._attr_preset_mode = preset_mode
-            self._target_temp = self._presets[preset_mode]
             await self._async_control_heating(force=True)
 
         self.async_write_ha_state()
