@@ -1,0 +1,5 @@
+{
+    "name": "THermestat",
+    "homeassistant": "2024.8.0",
+    "persistent_directory": "userfiles"
+}
